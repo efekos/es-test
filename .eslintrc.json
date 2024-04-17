@@ -29,7 +29,7 @@
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/no-useless-constructor": "error",
         "jsdoc/require-jsdoc": [
-            "warn",
+            "off",
             {
                 "publicOnly": true,
                 "enableFixer": false,
