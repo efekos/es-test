@@ -1,4 +1,4 @@
-import { describe, it, run } from './index.js';
+import { describe, it, run } from './testRunner.js';
 import { expect } from 'chai';
 
 describe('top level suite', () => {
