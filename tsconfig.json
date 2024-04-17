@@ -4,5 +4,7 @@
         "outDir": "./lib",
         "allowUnreachableCode": false,
         "declaration": true
-    }
+    },
+    "exclude": ["./test/**/*.ts"],
+    "include": ["./src"]
 }
