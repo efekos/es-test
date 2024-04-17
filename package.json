@@ -4,7 +4,9 @@
   "description": "Test runner for ES Modules",
   "main": "lit/index.js",
   "scripts": {
-    "build": "node distDeletor.js && tsc"
+    "build": "node distDeletor.js && tsc",
+    "prebuild":"npm run lint",
+    "lint": "eslint ./src/**/*.ts --fix"
   },
   "repository": {
     "type": "git",
