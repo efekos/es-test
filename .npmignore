@@ -1,4 +1,7 @@
 src
 .gitignore
+.eslintrc
 distDeletor.js
 tsconfig.json
+*.tgz
+tsconfig.eslint.json
