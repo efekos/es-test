@@ -1,10 +1,10 @@
-import { describe, info, it } from './index.js';
+import { describe, it, run } from './index.js';
 import { expect } from 'chai';
 
 describe('top level suite', () => {
     describe('nested suite', () => {
         it('should work', () => {
-            expect('foo').to.equal('bar');
+            expect('foo').to.equal('foo');
         });
     });
 });
@@ -15,4 +15,4 @@ describe('singular suite', () => {
     });
 });
 
-info();
+run();
