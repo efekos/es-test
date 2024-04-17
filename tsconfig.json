@@ -6,7 +6,8 @@
         "declaration": true,
         "skipLibCheck": true,
         "target": "ESNext",
-        "module": "ESNext"
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext"
     },
     "exclude": ["./test/**/*.ts"],
     "include": ["./src"]
