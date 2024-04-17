@@ -1,0 +1,34 @@
+{
+  "name": "es-test",
+  "version": "1.0.0",
+  "description": "Test runner for ES Modules",
+  "main": "lit/index.js",
+  "scripts": {
+    "build": "node distDeletor.js && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/efekos/es-test.git"
+  },
+  "keywords": [
+    "es-test",
+    "test",
+    "test-runner",
+    "runner",
+    "testing"
+  ],
+  "author": "efekos",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/efekos/es-test/issues"
+  },
+  "homepage": "https://github.com/efekos/es-test#readme",
+  "type": "module",
+  "bin": {
+    "estest": "./lib/index.js"
+  },
+  "types": "./lib/index.d.ts",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.7.0"
+  }
+}
