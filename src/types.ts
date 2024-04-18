@@ -35,10 +35,15 @@ interface TestResult {
     passed: boolean;
     expected: string;
     actual: string;
+    formatMode: TestFormatMode;
+
 }
+
+type TestFormatMode = 'none' | 'str';
 
 interface SummaryEntry {
     passed: boolean;
+    formatMode: TestFormatMode;
     expected: string;
     actual: string;
     totalTitle: string;
@@ -80,8 +85,9 @@ function applyChanges(str1:string, str2:string):string {
         else result += chalk.red(str2[i]);
     }
 
-    if(str2.length>str1.length)
-    result += chalk.red(str2.slice(str1.length));
+    if(str2.length>str1.length) result += chalk.red(str2.slice(str1.length));
+    else if(str1.length>str2.length) result += chalk.red(str1.slice(str2.length));
+    else result += chalk.red(str2[str2.length-1]);
     
     return result;
 }

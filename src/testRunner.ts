@@ -21,7 +21,7 @@ emitter.on('addSuite', (title, handler) => {
 emitter.on('addTest', (title, handler) => {
     const id = getId();
     const parent = stack.length ? stack[stack.length - 1] : undefined;
-    handlerMap.get(parent).tests.push({ handler, id, title, parent, depth: stack.length, result: { expected: '', actual: '', passed: true } });
+    handlerMap.get(parent).tests.push({ handler, id, title, parent, depth: stack.length, result: { expected: '', actual: '', passed: true, formatMode: 'str' } });
 });
 
 
@@ -33,6 +33,7 @@ export function it(title: string, handler: () => void) {
     emitter.emit('addTest', title, handler);
 }
 
+const toBeA = /^expected [\u0000-\uffff]+ to be a ([a-z]+)$/;
 const pass = `${chalk.green('✔')}`;
 const fail = `${chalk.red('🗴')}`;
 const testing = `${chalk.yellow('⚬')}`;
@@ -56,10 +57,20 @@ export function run() {
                     logUpdate(`${depth}${pass} ${test.title}`);
                 } catch (e) {
                     if (isAssertionError(e)) {
-                        test.result = { passed: false,
+                        test.result = {
+                            passed: false,
                             expected: JSON.stringify(sortObject(e.expected)),
-                            actual: JSON.stringify(sortObject(e.actual))
+                            actual: JSON.stringify(sortObject(e.actual)),
+                            formatMode: 'str'
                         };
+
+                        if (toBeA.test(e.message)) {
+                            const g = e.message.match(toBeA)[1];
+                            console.log(g);
+                            test.result.expected = g;
+                            test.result.actual = typeof e.actual;
+                            test.result.formatMode = 'none';
+                        }
                         logUpdate(`${depth}${fail} ${test.title}`);
                     }
                 } finally {
@@ -96,7 +107,7 @@ function printSum() {
             console.log(' ');
             console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
             console.log(` Expected: ${chalk.green(entry.expected)}`);
-            console.log(` Actual:   ${chalk.green(applyChanges(entry.expected,entry.actual))}`);
+            console.log(` Actual:   ${entry.formatMode==='str'?chalk.green(applyChanges(entry.expected, entry.actual)):chalk.red(entry.actual)}`);
         }
     });
 
