@@ -1,7 +1,8 @@
-import { EventMap, Suite, SummaryEntry, TestEvents, getId, isAssertionError } from './types.js';
+import { EventMap, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, sortObject } from './types.js';
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 import logUpdate from 'log-update';
+
 
 const stack: number[] = [];
 const emitter = new EventEmitter<EventMap<TestEvents>>();
@@ -55,14 +56,17 @@ export function run() {
                     logUpdate(`${depth}${pass} ${test.title}`);
                 } catch (e) {
                     if (isAssertionError(e)) {
-                        test.result = { passed: false, expected: JSON.stringify(e.expected), actual: JSON.stringify(e.actual) };
+                        test.result = { passed: false,
+                            expected: JSON.stringify(sortObject(e.expected)),
+                            actual: JSON.stringify(sortObject(e.actual))
+                        };
                         logUpdate(`${depth}${fail} ${test.title}`);
                     }
                 } finally {
                     logUpdate.done();
                     if (!test.result.passed) {
-                        console.log(`${depth}${fail}  Expected: ${test.result.expected}`);
-                        console.log(`${depth}${fail}  Actual:   ${test.result.actual}`);
+                        console.log(`${depth}${fail}  Expected: ${chalk.green(test.result.expected)}`);
+                        console.log(`${depth}${fail}  Actual:   ${chalk.red(test.result.actual)}`);
                     }
 
                     sum.push({ ...test.result, totalTitle: `${handlerMap.get(test.parent).title} > ${test.title}` });
@@ -90,9 +94,9 @@ function printSum() {
     sum.forEach(entry => {
         if (!entry.passed) {
             console.log(' ');
-            console.log(`${chalk.whiteBright(chalk.bgRed('FAIL'))} ${chalk.red(entry.totalTitle)}`);
-            console.log(` Expected: ${entry.expected}`);
-            console.log(` Actual:   ${entry.actual}`);
+            console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
+            console.log(` Expected: ${chalk.green(entry.expected)}`);
+            console.log(` Actual:   ${chalk.green(applyChanges(entry.expected,entry.actual))}`);
         }
     });
 
