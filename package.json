@@ -2,11 +2,8 @@
   "name": "es-test",
   "version": "1.0.0",
   "description": "Test runner for ES Modules",
-  "main": "lib/index.js",
-  "bin": {
-    "es-test": "./lib/index.js"
-  },
-  "types": "./lib/index.d.ts",
+  "main": "bin/index.js",
+  "types": "bin/index.d.ts",
   "scripts": {
     "build": "node distDeletor.js && tsc",
     "prebuild": "npm run lint",
@@ -38,6 +35,9 @@
     "@typescript-eslint/parser": "^7.7.0",
     "chai": "^5.1.0",
     "eslint-plugin-jsdoc": "^48.2.3"
+  },
+  "bin": {
+    "estest": "bin/index.js"
   },
   "dependencies": {
     "chalk": "^5.3.0",
