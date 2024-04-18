@@ -6,3 +6,4 @@ tsconfig.json
 *.tgz
 tsconfig.eslint.json
 test
+README.md
