@@ -1,38 +1,40 @@
-import { existsSync, readdirSync, stat, statSync } from 'fs';
-import { join } from 'path';
-import { run } from './testRunner.js';
-import logUpdate from 'log-update';
+import { describe, it, run } from './testRunner.js';
+import { existsSync, readdirSync, statSync } from 'fs';
 import chalk from 'chalk';
+import { join } from 'path';
+import logUpdate from 'log-update';
 
-const path = join(process.cwd(),process.argv.slice(2)[0]||'./');
+process.env.TESTING = '1';
 
-if(!existsSync(path)) {
+const path = join(process.cwd(), process.argv.slice(2)[0] || './');
+
+if (!existsSync(path)) {
     console.log(`Path ${path} does not exist`);
     process.exit(1);
 }
 
 const pathStat = statSync(path);
-if(!pathStat.isDirectory()){
+if (!pathStat.isDirectory()) {
     console.log(`Path ${path} is not a directory.`);
     process.exit(1);
 }
 
-const testPaths:string[] = [];
+const testPaths: string[] = [];
 const ignore = ['node_modules'];
 
-function findTest(path:string){
+function findTest(path: string) {
     const files = readdirSync(path);
 
-    files.filter(r=>!ignore.includes(r)).map(e=>join(path,e)).forEach(filePath=>{
+    files.filter(r => !ignore.includes(r)).map(e => join(path, e)).forEach(filePath => {
         const st = statSync(filePath);
-        if(st.isDirectory()) findTest(filePath);
-        else if (filePath.endsWith('.test.js')||filePath.endsWith('.spec.js')) testPaths.push(filePath);
+        if (st.isDirectory()) findTest(filePath);
+        else if (filePath.endsWith('.test.js') || filePath.endsWith('.spec.js')) testPaths.push(filePath);
     });
 }
 
 findTest(path);
 
-for (const test of testPaths){
+for (const test of testPaths) {
     logUpdate(`${chalk.bgYellow('IMPORTING FILE')} file://${test}`);
     await import(`file://${test}`);
 }
@@ -40,3 +42,5 @@ for (const test of testPaths){
 logUpdate(`${chalk.bgYellow('RUNNING TESTS')}`);
 logUpdate.done();
 run();
+
+export { describe, it };

@@ -65,7 +65,7 @@ export function run() {
                         console.log(`${depth}${fail}  Actual:   ${test.result.actual}`);
                     }
 
-                    sum.push({...test.result,totalTitle:`${handlerMap.get(test.parent).title} > ${test.title}`});
+                    sum.push({ ...test.result, totalTitle: `${handlerMap.get(test.parent).title} > ${test.title}` });
                 }
 
             });
@@ -83,12 +83,12 @@ export function run() {
 
 function printSum() {
 
-    const passed = sum.filter(e=>e.passed).length;
-    const failed = sum.filter(e=>!e.passed).length;
+    const passed = sum.filter(e => e.passed).length;
+    const failed = sum.filter(e => !e.passed).length;
     const total = passed + failed;
 
     sum.forEach(entry => {
-        if(!entry.passed) {
+        if (!entry.passed) {
             console.log(' ');
             console.log(`${chalk.whiteBright(chalk.bgRed('FAIL'))} ${chalk.red(entry.totalTitle)}`);
             console.log(` Expected: ${entry.expected}`);
@@ -100,8 +100,8 @@ function printSum() {
     const pText = chalk.green(`${passed} tests passed`);
     const tText = `${total} tests total`;
     const a = [];
-    if(failed>0) a.push(fText);
-    if(passed>0) a.push(pText);
+    if (failed > 0) a.push(fText);
+    if (passed > 0) a.push(pText);
     a.push(tText);
     console.log(' ');
     console.log(chalk.bold(a.join(', ')));
