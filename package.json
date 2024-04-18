@@ -2,7 +2,11 @@
   "name": "es-test",
   "version": "1.0.0",
   "description": "Test runner for ES Modules",
-  "main": "lit/index.js",
+  "main": "lib/index.js",
+  "bin": {
+    "es-test": "./lib/index.js"
+  },
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "node distDeletor.js && tsc",
     "prebuild": "npm run lint",
@@ -26,15 +30,14 @@
   },
   "homepage": "https://github.com/efekos/es-test#readme",
   "type": "module",
-  "bin": {
-    "estest": "./lib/index.js"
-  },
-  "types": "./lib/index.d.ts",
   "devDependencies": {
     "@types/chai": "^4.3.14",
     "@types/chalk": "^2.2.0",
+    "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "chai": "^5.1.0"
+    "@typescript-eslint/parser": "^7.7.0",
+    "chai": "^5.1.0",
+    "eslint-plugin-jsdoc": "^48.2.3"
   },
   "dependencies": {
     "chalk": "^5.3.0",
