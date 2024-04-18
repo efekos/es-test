@@ -35,11 +35,11 @@ function findTest(path: string) {
 findTest(path);
 
 for (const test of testPaths) {
-    logUpdate(`${chalk.bgYellow('IMPORTING FILE')} file://${test}`);
+    logUpdate(`${chalk.yellow('IMPORTING FILE')} file://${test}`);
     await import(`file://${test}`);
 }
 
-logUpdate(`${chalk.bgYellow('RUNNING TESTS')}`);
+logUpdate(`${chalk.yellow('RUNNING TESTS')}`);
 logUpdate.done();
 run();
 

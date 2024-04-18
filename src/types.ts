@@ -74,18 +74,15 @@ function sortObject(obj) {
 
 function applyChanges(str1:string, str2:string):string {
     let result = '';
+
     for (let i = 0; i < Math.min(str1.length, str2.length)-1; i++) {
-        if (str1[i] !== str2[i]) {
-            result += chalk.red(str2[i]);
-        } else {
-            result += str2[i];
-        }
+        if(str1[i] === str2[i]) result += str2[i];
+        else result += chalk.red(str2[i]);
     }
-    if (str2.length > str1.length) {
-        result += chalk.red(str2.slice(str1.length-1));
-    } else if (str1.length > str2.length) {
-        result += chalk.gray(str1.slice(str2.length-1));
-    } else result += str2[str2.length-1];
+
+    if(str2.length>str1.length)
+    result += chalk.red(str2.slice(str1.length));
+    
     return result;
 }
 
