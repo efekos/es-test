@@ -1,6 +1,6 @@
 {
   "name": "@efekos/es-test",
-  "version": "1.0.0-r2",
+  "version": "1.0.1",
   "description": "Test runner for ES Modules",
   "main": "bin/index.js",
   "types": "bin/index.d.ts",

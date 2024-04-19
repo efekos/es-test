@@ -1,4 +1,4 @@
-# es-test `v1.0.0`
+# es-test `v1.0.1`
 
 > Simple test runner to use in ESM modules.
 
@@ -30,5 +30,18 @@ describe('9 + 10',()=>{ // create a suite with describe
 
 });
 ```
+## Handling errors
 
-That's it, only two functions were describe and it so idk what else can i say here
+```javascript
+import {onError} from '@efekos/es-test/bin/testRunner.js'
+
+onError('CustomError',(err)=>{ // Handle custom error types
+    return {
+        passed:false,
+        expected:err.exp,
+        actual:err.act,
+        formatMode:'none' // 'str' will make every difference in actual value look red instead of making it completely red in summary
+    }
+})
+
+```
