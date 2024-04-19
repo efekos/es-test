@@ -95,4 +95,9 @@ function applyChanges(str1:string, str2:string):string {
     return result;
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn };
+function trail(str:string){
+    if(str.length<32) return str;
+    else return `${str.slice(0,16)}...`; 
+}
+
+export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn, trail };

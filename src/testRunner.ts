@@ -1,4 +1,4 @@
-import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, sortObject } from './types.js';
+import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, sortObject, trail } from './types.js';
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 import logUpdate from 'log-update';
@@ -94,8 +94,8 @@ export function run() {
                 } finally {
                     logUpdate.done();
                     if (!test.result.passed) {
-                        console.log(`${depth}${fail}  Expected: ${chalk.green(test.result.expected)}`);
-                        console.log(`${depth}${fail}  Actual:   ${chalk.red(test.result.actual)}`);
+                        console.log(`${depth}${fail}  Expected: ${chalk.green(trail(test.result.expected))}`);
+                        console.log(`${depth}${fail}  Actual:   ${chalk.red(trail(test.result.actual))}`);
                     }
 
                     sum.push({ ...test.result, totalTitle: `${handlerMap.get(test.parent).title} > ${test.title}` });
