@@ -33,8 +33,7 @@
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
-    "chai": "^5.1.0",
-    "eslint-plugin-jsdoc": "^48.2.3"
+    "chai": "^5.1.0"
   },
   "bin": {
     "estest": "bin/index.js"
