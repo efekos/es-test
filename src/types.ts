@@ -90,7 +90,7 @@ function applyChanges(str1: string, str2: string): string {
 
     if (str2.length > str1.length) result += chalk.red(str2.slice(str1.length));
     else if (str1.length > str2.length) result += chalk.red(str1.slice(str2.length));
-    else result += chalk.red(str2[str2.length - 1]);
+    else result += str2[str2.length - 1];
 
     return result;
 }
