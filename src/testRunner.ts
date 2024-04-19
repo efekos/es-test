@@ -1,4 +1,4 @@
-import { EventMap, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, sortObject } from './types.js';
+import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, sortObject } from './types.js';
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 import logUpdate from 'log-update';
@@ -7,6 +7,7 @@ import logUpdate from 'log-update';
 const stack: number[] = [];
 const emitter = new EventEmitter<EventMap<TestEvents>>();
 const handlerMap = new Map<number, Suite>();
+const errorHandlerMap = new Map<string,ErrorHandlerFn>();
 
 emitter.on('addSuite', (title, handler) => {
     const id = getId();
@@ -24,12 +25,19 @@ emitter.on('addTest', (title, handler) => {
     handlerMap.get(parent).tests.push({ handler, id, title, parent, depth: stack.length, result: { expected: '', actual: '', passed: true, formatMode: 'str' } });
 });
 
+emitter.on('addErrorHandler',(name,handler)=>{
+    errorHandlerMap.set(name,handler);
+});
 
-export function describe(title: string, handler: () => void) {
+export function onError(name: string, handler: ErrorHandlerFn){
+    emitter.emit('addErrorHandler',name,handler);
+}
+
+export function describe(title: string, handler: HandlerFn) {
     emitter.emit('addSuite', title, handler);
 }
 
-export function it(title: string, handler: () => void) {
+export function it(title: string, handler: HandlerFn) {
     emitter.emit('addTest', title, handler);
 }
 
@@ -71,8 +79,18 @@ export function run() {
                             test.result.actual = typeof e.actual;
                             test.result.formatMode = 'none';
                         }
-                        logUpdate(`${depth}${fail} ${test.title}`);
+                    } else if (errorHandlerMap.has(e.name)) {
+                        const handle = errorHandlerMap.get(e.name);
+                        test.result = handle(e);
+                    } else {
+                        test.result = {
+                            passed: false,
+                            expected: 'No errors',
+                            actual: `${e.name}: ${e.message}`,
+                            formatMode: 'none'
+                        };
                     }
+                    logUpdate(`${depth}${fail} ${test.title}`);
                 } finally {
                     logUpdate.done();
                     if (!test.result.passed) {
@@ -107,7 +125,7 @@ function printSum() {
             console.log(' ');
             console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
             console.log(` Expected: ${chalk.green(entry.expected)}`);
-            console.log(` Actual:   ${entry.formatMode==='str'?chalk.green(applyChanges(entry.expected, entry.actual)):chalk.red(entry.actual)}`);
+            console.log(` Actual:   ${entry.formatMode === 'str' ? chalk.green(applyChanges(entry.expected, entry.actual)) : chalk.red(entry.actual)}`);
         }
     });
 

@@ -4,9 +4,12 @@ import chalk from 'chalk';
 interface TestEvents {
     addSuite: never;
     addTest: never;
+    addErrorHandler: never;
 }
 type EventMap<T> = Record<keyof T, any[]>;
 type HandlerFn = () => void;
+type ErrorHandlerFn = (e:Error) => TestResult;
+
 
 let id = -1;
 function getId(): number {
@@ -92,4 +95,4 @@ function applyChanges(str1:string, str2:string):string {
     return result;
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges };
+export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn };
