@@ -41,7 +41,7 @@ for (const test of testPaths) {
     await import(`file://${test}`);
 }
 
-logUpdate(`${chalk.yellow('RUNNING TESTS')}`);
+logUpdate(`${chalk.yellow('RUNNING TESTS')} from ${testPaths.length} files`);
 logUpdate.done();
 run();
 

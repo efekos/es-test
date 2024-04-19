@@ -7,7 +7,7 @@ import logUpdate from 'log-update';
 const stack: number[] = [];
 const emitter = new EventEmitter<EventMap<TestEvents>>();
 const handlerMap = new Map<number, Suite>();
-const errorHandlerMap = new Map<string,ErrorHandlerFn>();
+const errorHandlerMap = new Map<string, ErrorHandlerFn>();
 
 emitter.on('addSuite', (title, handler) => {
     const id = getId();
@@ -25,12 +25,12 @@ emitter.on('addTest', (title, handler) => {
     handlerMap.get(parent).tests.push({ handler, id, title, parent, depth: stack.length, result: { expected: '', actual: '', passed: true, formatMode: 'str' } });
 });
 
-emitter.on('addErrorHandler',(name,handler)=>{
-    errorHandlerMap.set(name,handler);
+emitter.on('addErrorHandler', (name, handler) => {
+    errorHandlerMap.set(name, handler);
 });
 
-export function onError(name: string, handler: ErrorHandlerFn){
-    emitter.emit('addErrorHandler',name,handler);
+export function onError(name: string, handler: ErrorHandlerFn) {
+    emitter.emit('addErrorHandler', name, handler);
 }
 
 export function describe(title: string, handler: HandlerFn) {
