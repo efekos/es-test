@@ -1,4 +1,4 @@
-# es-test `v1.0.2`
+# es-test `v1.0.3`
 
 > Simple test runner to use in ESM modules.
 
@@ -17,7 +17,7 @@ running them. You can limit scanning into one directory by passing in the dir na
 ## Writing tests
 
 ```javascript
-import {describe,it} from '@efekos/es-test/bin/testRunner.js' // You excplicitly have to import from testRunner.js i have no idea why
+import {describe,it,inst} from '@efekos/es-test/bin/testRunner.js' // You excplicitly have to import from testRunner.js i have no idea why
 import {expect} from 'chai' // or any other assertion module
 
 describe('9 + 10',()=>{ // create a suite with describe
@@ -27,9 +27,45 @@ describe('9 + 10',()=>{ // create a suite with describe
         expect(9+10).to.be.equal(21);
 
     });
+});
+
+function isNumber(s){
+    return /[+-]?\d+(\.\d+)?/.test(s);
+}
+
+describe('isNumber function',()=>{
+
+    it('should match all the numbers',()=>{
+
+        inst(()=>{ // Create different cases with inst
+            expect(isNumber('5')).to.be.equal(true)
+        });
+        
+        inst(()=>{
+            expect(isNumber('455.34')).to.be.equal(true)
+        });
+        
+        inst(()=>{
+            expect(isNumber('-145')).to.be.equal(true)
+        });
+        
+        inst(()=>{
+            expect(isNumber('-3465.0000000003')).to.be.equal(true)
+        });
+        
+        inst(()=>{
+            expect(isNumber('-.3495')).to.be.equal(true)
+        });
+        
+        inst(()=>{
+            expect(isNumber('+.25')).to.be.equal(true)
+        });
+
+    },true /*this true makes this test a cased test*/);
 
 });
 ```
+
 ## Handling errors
 
 ```javascript
