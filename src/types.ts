@@ -4,6 +4,7 @@ import chalk from 'chalk';
 interface TestEvents {
     addSuite: never;
     addTest: never;
+    addTestCase: never;
     addErrorHandler: never;
 }
 type EventMap<T> = Record<keyof T, any[]>;
@@ -16,22 +17,45 @@ function getId(): number {
     return ++id;
 }
 
-interface Suite {
+interface TestingObjectTypes {
+    suite: Suite;
+    test: Test;
+    testCase: TestCase;
+}
+type TestingObjectType = keyof TestingObjectTypes;
+type TestingObjectT = Suite|TestCase|Test;
+
+interface TestingObject {
     id: number;
-    title: string;
-    tests: Test[];
+    type: TestingObjectType;
     parent?: number;
-    children: number[];
     depth: number;
 }
 
-interface Test {
-    id: number;
+interface Suite extends TestingObject {
     title: string;
-    parent?: number;
+    tests: number[];
+    children: number[];
+}
+
+interface TestCase extends TestingObject {
     handler: HandlerFn;
-    depth: number;
+    caseNo: number;
+    result: TestCaseResult;
+}
+
+interface Test extends TestingObject {
+    title: string;
+    handler: HandlerFn;
     result: TestResult;
+    children: number[];
+}
+
+interface TestCaseResult {
+    passed: boolean;
+    expected: string;
+    actual: string;
+    formatMode: TestFormatMode;
 }
 
 interface TestResult {
@@ -39,7 +63,8 @@ interface TestResult {
     expected: string;
     actual: string;
     formatMode: TestFormatMode;
-
+    passedCases?: number;
+    totalCases?: number;
 }
 
 type TestFormatMode = 'none' | 'str';
@@ -50,11 +75,14 @@ interface SummaryEntry {
     expected: string;
     actual: string;
     totalTitle: string;
+    passedCases?: number;
+    totalCases?: number;
+    failedCases?: number[];
 }
 
 
-function isTest(thing: Test | Suite): thing is Test {
-    return 'handler' in thing;
+function isTestingObject<T extends TestingObjectType>(thing: TestingObject, type: T): thing is TestingObjectTypes[T] {
+    return thing.type === type;
 }
 
 function isAssertionError(e: Error): e is AssertionError {
@@ -80,21 +108,20 @@ function sortObject(obj) {
     return sortedObj;
 }
 
-function pluralize(n:number):string{
-    return n>1?'s':'';
+function pluralize(n: number): string {
+    return n > 1 ? 's' : '';
 }
 
 function applyChanges(str1: string, str2: string): string {
     let result = '';
 
-    for (let i = 0; i < Math.min(str1.length, str2.length) - 1; i++) {
+    for (let i = 0; i < Math.min(str1.length, str2.length); i++) {
         if (str1[i] === str2[i]) result += str2[i];
         else result += chalk.red(str2[i]);
     }
 
     if (str2.length > str1.length) result += chalk.red(str2.slice(str1.length));
-    else if (str1.length > str2.length) result += chalk.red(str1.slice(str2.length));
-    else result += str2[str2.length - 1];
+    else if (str1.length > str2.length) result += chalk.gray(str1.slice(str2.length));
 
     return result;
 }
@@ -104,4 +131,4 @@ function trail(str: string) {
     else return `${str.slice(0, 16)}...`;
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn, trail, pluralize as multipler };
+export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn, trail, pluralize, isTestingObject, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes,TestCase };
