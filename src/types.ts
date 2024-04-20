@@ -23,7 +23,7 @@ interface TestingObjectTypes {
     testCase: TestCase;
 }
 type TestingObjectType = keyof TestingObjectTypes;
-type TestingObjectT = Suite|TestCase|Test;
+type TestingObjectT = Suite | TestCase | Test;
 
 interface TestingObject {
     id: number;
@@ -131,4 +131,7 @@ function trail(str: string) {
     else return `${str.slice(0, 16)}...`;
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn, trail, pluralize, isTestingObject, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes,TestCase };
+export { 
+    Test, TestEvents, EventMap, HandlerFn, Suite, TestResult, SummaryEntry, ErrorHandlerFn, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes, TestCase,
+    getId, isAssertionError, sortObject, applyChanges, trail, pluralize, isTestingObject
+};

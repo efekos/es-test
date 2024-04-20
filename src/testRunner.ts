@@ -66,7 +66,7 @@ emitter.on('addTestCase', handler => {
     }
     const parentTest = objectMap.get(parent) as Test;
     parentTest.children.push(id);
-    objectMap.set(id, { type: 'testCase', caseNo: parentTest.children.length, handler, id, depth: parentTest.depth + 1, result:{actual:'',expected:'',formatMode:'none',passed:true} });
+    objectMap.set(id, { type: 'testCase', caseNo: parentTest.children.length, handler, id, depth: parentTest.depth + 1, result: { actual: '', expected: '', formatMode: 'none', passed: true } });
 });
 
 export function onError(name: string, handler: ErrorHandlerFn) {
@@ -163,38 +163,38 @@ export function run() {
 
                         try {
                             testCase.handler();
-                        } catch (e){
+                        } catch (e) {
                             failedCases.push(testCase.id);
                             test.result.passedCases--;
                             test.result.passed = false;
-                            if(isAssertionError(e))
+                            if (isAssertionError(e))
                                 testCase.result = {
                                     passed: false,
                                     expected: JSON.stringify(sortObject(e.expected)),
                                     actual: JSON.stringify(sortObject(e.actual)),
                                     formatMode: 'str'
                                 };
-                            else if (errorHandlerMap.has(e.name))testCase.result = errorHandlerMap.get(e.name)(e);
-                            else testCase.result = {passed:false,formatMode:'none',expected:'No errors',actual:`${e.name}: ${e.message}`};
+                            else if (errorHandlerMap.has(e.name)) testCase.result = errorHandlerMap.get(e.name)(e);
+                            else testCase.result = { passed: false, formatMode: 'none', expected: 'No errors', actual: `${e.name}: ${e.message}` };
 
                         }
 
                         curCaseNo++;
                     });
-                    logUpdate(`${depth}${test.result.passed?pass:fail} ${test.title} ${chalk.gray(`${curCaseNo}/${totalCases}`)}`); 
+                    logUpdate(`${depth}${test.result.passed ? pass : fail} ${test.title} ${chalk.gray(`${curCaseNo}/${totalCases}`)}`);
                     logUpdate.done();
-                    if(!test.result.passed){
+                    if (!test.result.passed) {
                         console.log(`${depth}${fail}  ${failedCases.length} cases failed`);
-                        failedCases.forEach(e=>{
+                        failedCases.forEach(e => {
                             const testCase = objectMap.get(e) as TestCase;
-    
+
                             console.log(`${depth}${fail}   Case #${testCase.caseNo} failed`);
                             console.log(`${depth}${fail}    Expected: ${chalk.green(trail(testCase.result.expected))}`);
                             console.log(`${depth}${fail}    Actual:   ${chalk.red(trail(testCase.result.actual))}`);
                         });
                     }
 
-                    sum.push({ ...test.result, totalTitle: `${(objectMap.get(test.parent) as Suite).title} > ${test.title}`,failedCases });
+                    sum.push({ ...test.result, totalTitle: `${(objectMap.get(test.parent) as Suite).title} > ${test.title}`, failedCases });
                 }
 
                 if (test.children.length > 0) casedTest();
@@ -203,7 +203,7 @@ export function run() {
             runSuites(suite.children);
 
             objectMap.delete(id);
-            if (Array.from(objectMap.values()).filter(r=>isTestingObject(r,'suite')).length===0) printSum();
+            if (Array.from(objectMap.values()).filter(r => isTestingObject(r, 'suite')).length === 0) printSum();
         }
     }
 
@@ -219,28 +219,28 @@ function printSum() {
     const total = passed + failed;
 
     sum.forEach(entry => {
-        if(!('passedCases' in entry))
-        if (!entry.passed) {
-            console.log(' ');
-            console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
-            console.log(` Expected: ${chalk.green(entry.expected)}`);
-            console.log(` Actual:   ${entry.formatMode === 'str' ? chalk.green(applyChanges(entry.expected, entry.actual)) : chalk.red(entry.actual)}`);
-        }
+        if (!('passedCases' in entry))
+            if (!entry.passed) {
+                console.log(' ');
+                console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
+                console.log(` Expected: ${chalk.green(entry.expected)}`);
+                console.log(` Actual:   ${entry.formatMode === 'str' ? chalk.green(applyChanges(entry.expected, entry.actual)) : chalk.red(entry.actual)}`);
+            }
 
-        if('passedCases' in entry)
-        if(entry.passedCases!==entry.totalCases){
-            console.log(' ');
-            console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
-            console.log(` ${entry.passedCases} case${pluralize(entry.passedCases)} passed, ${entry.failedCases.length} case${pluralize(entry.failedCases.length)} failed.`);
-            entry.failedCases.forEach(i=>{
-                const {caseNo,result} = objectMap.get(i) as TestCase;
+        if ('passedCases' in entry)
+            if (entry.passedCases !== entry.totalCases) {
+                console.log(' ');
+                console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
+                console.log(` ${entry.passedCases} case${pluralize(entry.passedCases)} passed, ${entry.failedCases.length} case${pluralize(entry.failedCases.length)} failed.`);
+                entry.failedCases.forEach(i => {
+                    const { caseNo, result } = objectMap.get(i) as TestCase;
 
-                console.log(` Case #${caseNo}`);
-                console.log(`  Expected: ${chalk.green(result.expected)}`);
-                console.log(`  Actual:   ${result.formatMode==='str'?chalk.green(applyChanges(result.expected,result.actual)):chalk.red(result.actual)}`);
-                console.log(result);
-            });
-        }
+                    console.log(` Case #${caseNo}`);
+                    console.log(`  Expected: ${chalk.green(result.expected)}`);
+                    console.log(`  Actual:   ${result.formatMode === 'str' ? chalk.green(applyChanges(result.expected, result.actual)) : chalk.red(result.actual)}`);
+                    console.log(result);
+                });
+            }
     });
 
     const fText = chalk.red(`${failed} test${pluralize(failed)} failed`);
