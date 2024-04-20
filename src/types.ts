@@ -80,6 +80,10 @@ function sortObject(obj) {
     return sortedObj;
 }
 
+function pluralize(n:number):string{
+    return n>1?'s':'';
+}
+
 function applyChanges(str1: string, str2: string): string {
     let result = '';
 
@@ -100,4 +104,4 @@ function trail(str: string) {
     else return `${str.slice(0, 16)}...`;
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn, trail };
+export { Test, TestEvents, EventMap, HandlerFn, getId, Suite, isTest, isAssertionError, TestResult, SummaryEntry, sortObject, applyChanges, ErrorHandlerFn, trail, pluralize as multipler };

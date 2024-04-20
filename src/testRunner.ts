@@ -1,4 +1,4 @@
-import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, sortObject, trail } from './types.js';
+import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, TestEvents, applyChanges, getId, isAssertionError, multipler, sortObject, trail } from './types.js';
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 import logUpdate from 'log-update';
@@ -129,9 +129,9 @@ function printSum() {
         }
     });
 
-    const fText = chalk.red(`${failed} tests failed`);
-    const pText = chalk.green(`${passed} tests passed`);
-    const tText = `${total} tests total`;
+    const fText = chalk.red(`${failed} test${multipler(failed)} failed`);
+    const pText = chalk.green(`${passed} test${multipler(passed)} passed`);
+    const tText = `${total} test${multipler(total)} total`;
     const a = [];
     if (failed > 0) a.push(fText);
     if (passed > 0) a.push(pText);

@@ -5,6 +5,7 @@ import { existsSync, readdirSync, statSync } from 'fs';
 import chalk from 'chalk';
 import { join } from 'path';
 import logUpdate from 'log-update';
+import { multipler } from './types.js';
 
 process.env.TESTING = '1';
 
@@ -41,7 +42,7 @@ for (const test of testPaths) {
     await import(`file://${test}`);
 }
 
-logUpdate(`${chalk.yellow('RUNNING TESTS')} from ${testPaths.length} files`);
+logUpdate(`${chalk.yellow('RUNNING TEST(S)')} from ${testPaths.length} file${multipler(testPaths.length)}`);
 logUpdate.done();
 run();
 
