@@ -1,4 +1,4 @@
-# es-test `v1.0.3`
+# es-test `v1.0.4`
 
 > Simple test runner to use in ESM modules.
 
