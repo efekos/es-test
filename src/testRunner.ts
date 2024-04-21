@@ -86,7 +86,7 @@ export function inst(handler: HandlerFn) {
 }
 
 const toBeA = /^expected [\u0000-\uffff]+ to be an? ([a-z]+)$/;
-const pass = `${chalk.green('✔')}`;
+const pass = `${chalk.green('✔')} `;
 const fail = `${chalk.red('🗴')}`;
 const testing = `${chalk.yellow('⚬')}`;
 const d = '  ';
@@ -121,7 +121,6 @@ export function run() {
 
                             if (toBeA.test(e.message)) {
                                 const g = e.message.match(toBeA)[1];
-                                console.log(g);
                                 test.result.expected = g;
                                 test.result.actual = typeof e.actual;
                                 test.result.formatMode = 'none';
@@ -137,7 +136,7 @@ export function run() {
                                 formatMode: 'none'
                             };
                         }
-                        logUpdate(`${depth}${fail} ${test.title}`);
+                        logUpdate(`${depth}${fail}${test.title}`);
                     } finally {
                         logUpdate.done();
                         if (!test.result.passed) {
@@ -177,20 +176,27 @@ export function run() {
                             else if (errorHandlerMap.has(e.name)) testCase.result = errorHandlerMap.get(e.name)(e);
                             else testCase.result = { passed: false, formatMode: 'none', expected: 'No errors', actual: `${e.name}: ${e.message}` };
 
+                            if (toBeA.test(e.message)) {
+                                const g = e.message.match(toBeA)[1];
+                                testCase.result.expected = g;
+                                testCase.result.actual = typeof e.actual;
+                                testCase.result.formatMode = 'none';
+                            }
+
                         }
 
                         curCaseNo++;
                     });
-                    logUpdate(`${depth}${test.result.passed ? pass : fail} ${test.title} ${chalk.gray(`${curCaseNo}/${totalCases}`)}`);
+                    logUpdate(`${depth}${test.result.passed ? pass : fail}${test.title} ${chalk.gray(`${curCaseNo}/${totalCases}`)}`);
                     logUpdate.done();
                     if (!test.result.passed) {
-                        console.log(`${depth}${fail}  ${failedCases.length} cases failed`);
+                        console.log(`${depth}${fail}  ${failedCases.length} case${pluralize(failedCases.length)} failed`);
                         failedCases.forEach(e => {
                             const testCase = objectMap.get(e) as TestCase;
 
                             console.log(`${depth}${fail}   Case #${testCase.caseNo} failed`);
-                            console.log(`${depth}${fail}    Expected: ${chalk.green(trail(testCase.result.expected))}`);
-                            console.log(`${depth}${fail}    Actual:   ${chalk.red(trail(testCase.result.actual))}`);
+                            console.log(`${depth}${fail}     Expected: ${chalk.green(trail(testCase.result.expected))}`);
+                            console.log(`${depth}${fail}     Actual:   ${chalk.red(trail(testCase.result.actual))}`);
                         });
                     }
 
@@ -238,7 +244,6 @@ function printSum() {
                     console.log(` Case #${caseNo}`);
                     console.log(`  Expected: ${chalk.green(result.expected)}`);
                     console.log(`  Actual:   ${result.formatMode === 'str' ? chalk.green(applyChanges(result.expected, result.actual)) : chalk.red(result.actual)}`);
-                    console.log(result);
                 });
             }
     });
