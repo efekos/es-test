@@ -109,7 +109,7 @@ export function run() {
                     try {
                         logUpdate(`${depth}${testing} ${test.title}`);
                         test.handler();
-                        logUpdate(`${depth}${pass} ${test.title}`);
+                        logUpdate(`${depth}${pass}${test.title}`);
                     } catch (e) {
                         if (isAssertionError(e)) {
                             test.result = {
