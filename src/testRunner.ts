@@ -1,4 +1,5 @@
-import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, Test, TestCase, TestEvents, TestingObject, applyChanges, getId, isAssertionError, isTestingObject, pluralize, sortObject, trail } from './types.js';
+import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, Test, TestCase, TestEvents, TestingObject } from './types.js';
+import { applyChanges, getId, isAssertionError, isTestingObject, pluralize, sortObject, trail } from './functions.js';
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 import logUpdate from 'log-update';

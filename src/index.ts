@@ -5,7 +5,7 @@ import { existsSync, readdirSync, statSync } from 'fs';
 import chalk from 'chalk';
 import { join } from 'path';
 import logUpdate from 'log-update';
-import { pluralize } from './types.js';
+import { pluralize } from './functions.js';
 
 process.env.TESTING = '1';
 
