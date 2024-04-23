@@ -71,9 +71,10 @@ function findDifference(_expObject,_actObject):Differences{
             const v1 = expObject[key];
             const v2 = actObject[key];
 
-            if(typeof v2 === 'object' && typeof v1 === 'object'){
+            if(typeof v2 === 'object'&&typeof v1 === 'object'){
                 putter[key] = {};
                 f(putter[key],v1,v2);
+                return;
             }
 
             if(!(key in expObject)) {
@@ -92,8 +93,35 @@ function findDifference(_expObject,_actObject):Differences{
 
 function applyObject(str1:string,str2:string):string {
     const differences:Differences = findDifference(JSON.parse(str1),JSON.parse(str2));
+    let s = '{';
+    const c = ()=>!s.endsWith('{')?',':'';
 
-    return JSON.stringify(differences);
+    function f(parent:Differences){
+            
+        Object.keys(parent).forEach(key=>{
+
+            const v = parent[key];
+            
+           
+
+            if(isDifference(v)){
+                if(v.existed) s += `${c()}${key}:`;
+                else s += `${c()}${chalk.blue(key)+':'}`;
+                s+= (!v.existed?chalk.blue:(v.actual===v.expected?chalk.green:chalk.red))(JSON.stringify(v.actual));
+            } else {
+                s += `${c()}${key}:`;
+                s += '{';
+                f(v);
+                s += '}';
+            }
+
+        });
+        
+    }
+
+    f(differences);
+    s += '}';
+    return s.replace(/[,:]/g,s=>s+' ');
 }
 
 function format(mode:TestFormatMode,str1:string,str2:string){

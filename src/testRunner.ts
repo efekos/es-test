@@ -117,7 +117,7 @@ export function run() {
                                 passed: false,
                                 expected: JSON.stringify(sortObject(e.expected)),
                                 actual: JSON.stringify(sortObject(e.actual)),
-                                formatMode: 'str'
+                                formatMode: typeof e.actual === 'object'?'obj':'str'
                             };
 
                             if (toBeA.test(e.message)) {
@@ -172,7 +172,7 @@ export function run() {
                                     passed: false,
                                     expected: JSON.stringify(sortObject(e.expected)),
                                     actual: JSON.stringify(sortObject(e.actual)),
-                                    formatMode: 'str'
+                                    formatMode: typeof e.actual === 'object'?'obj':'str'
                                 };
                             else if (errorHandlerMap.has(e.name)) testCase.result = errorHandlerMap.get(e.name)(e);
                             else testCase.result = { passed: false, formatMode: 'none', expected: 'No errors', actual: `${e.name}: ${e.message}` };
