@@ -121,7 +121,7 @@ function applyObject(str1:string,str2:string):string {
 
     f(differences);
     s += '}';
-    return s.replace(/[,:]/g,s=>s+' ');
+    return s.replace(/([,:])/g,'$1 ');
 }
 
 function format(mode:TestFormatMode,str1:string,str2:string){
