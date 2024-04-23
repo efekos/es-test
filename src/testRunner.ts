@@ -1,5 +1,5 @@
 import { ErrorHandlerFn, EventMap, HandlerFn, Suite, SummaryEntry, Test, TestCase, TestEvents, TestingObject } from './types.js';
-import { applyChanges, getId, isAssertionError, isTestingObject, pluralize, sortObject, trail } from './functions.js';
+import { applyChanges, format, getId, isAssertionError, isTestingObject, pluralize, sortObject, trail } from './functions.js';
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 import logUpdate from 'log-update';
@@ -231,7 +231,7 @@ function printSum() {
                 console.log(' ');
                 console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
                 console.log(` Expected: ${chalk.green(entry.expected)}`);
-                console.log(` Actual:   ${entry.formatMode === 'str' ? chalk.green(applyChanges(entry.expected, entry.actual)) : chalk.red(entry.actual)}`);
+                console.log(` Actual:   ${format(entry.formatMode,entry.expected,entry.actual)}`);
             }
 
         if ('passedCases' in entry)
@@ -244,7 +244,7 @@ function printSum() {
 
                     console.log(` Case #${caseNo}`);
                     console.log(`  Expected: ${chalk.green(result.expected)}`);
-                    console.log(`  Actual:   ${result.formatMode === 'str' ? chalk.green(applyChanges(result.expected, result.actual)) : chalk.red(result.actual)}`);
+                    console.log(`  Actual:   ${format(result.formatMode,result.expected,result.actual)}`);
                 });
             }
     });

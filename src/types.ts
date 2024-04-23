@@ -61,7 +61,7 @@ interface TestResult {
     totalCases?: number;
 }
 
-type TestFormatMode = 'none' | 'str';
+type TestFormatMode = 'none' | 'str' | 'obj';
 
 interface SummaryEntry {
     passed: boolean;
@@ -74,4 +74,4 @@ interface SummaryEntry {
     failedCases?: number[];
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, Suite, TestResult, SummaryEntry, ErrorHandlerFn, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes, TestCase };
+export { Test, TestEvents, EventMap, HandlerFn, Suite, TestResult, SummaryEntry, ErrorHandlerFn, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes, TestCase,TestFormatMode };

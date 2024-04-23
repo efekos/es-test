@@ -1,4 +1,4 @@
-import { TestingObject, TestingObjectType, TestingObjectTypes } from './types.js';
+import { TestFormatMode, TestingObject, TestingObjectType, TestingObjectTypes } from './types.js';
 import { AssertionError } from 'assert';
 import chalk from 'chalk';
 
@@ -53,10 +53,61 @@ function applyChanges(str1: string, str2: string): string {
     return result;
 }
 
+
+interface Difference {expected:unknown;actual:unknown;existed:boolean};
+type Differences = {[k:string]:Difference|Differences};
+
+function isDifference(t:unknown): t is Difference {
+    return typeof t === 'object' && 'expected' in t && 'actual' in t && 'existed' in t && typeof t.existed === 'boolean';
+}
+function findDifference(_expObject,_actObject):Differences{
+
+    const res:Differences = {};
+
+    function f(putter,expObject,actObject){
+
+        Object.keys(actObject).forEach(key=>{
+
+            const v1 = expObject[key];
+            const v2 = actObject[key];
+
+            if(typeof v2 === 'object' && typeof v1 === 'object'){
+                putter[key] = {};
+                f(putter[key],v1,v2);
+            }
+
+            if(!(key in expObject)) {
+                putter[key] = {expected:v1,actual:v2,existed:false};
+                return;
+            }
+
+            putter[key] = {expected:v1,actual:v2,existed:true};
+        });
+
+    }
+
+    f(res,_expObject,_actObject);
+    return res;
+}
+
+function applyObject(str1:string,str2:string):string {
+    const differences:Differences = findDifference(JSON.parse(str1),JSON.parse(str2));
+
+    return JSON.stringify(differences);
+}
+
+function format(mode:TestFormatMode,str1:string,str2:string){
+    switch(mode){
+        case 'none': return chalk.red(str2);
+        case 'str': return applyChanges(str1,str2);
+        case 'obj': return applyObject(str1,str2);
+    }
+}
+
 function trail(str: string) {
     if (str.length < 32) return str;
     else return `${str.slice(0, 16)}...`;
 }
 
 
-export {getId, isAssertionError, sortObject, applyChanges, trail, pluralize, isTestingObject};
+export {getId, isAssertionError, sortObject, applyChanges, trail, pluralize, isTestingObject,format};
