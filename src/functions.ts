@@ -107,7 +107,8 @@ function applyObject(str1:string,str2:string):string {
             if(isDifference(v)){
                 if(v.existed) s += `${c()}${key}:`;
                 else s += `${c()}${chalk.blue(key)+':'}`;
-                s+= (!v.existed?chalk.blue:(v.actual===v.expected?chalk.green:chalk.red))(JSON.stringify(v.actual));
+                const f = !v.existed?chalk.blue:(v.actual===v.expected?chalk.green:chalk.red);
+                s+= (f===chalk.red?chalk.strikethrough(chalk.green(v.expected))+' ':'')+f(JSON.stringify(v.actual));
             } else {
                 s += `${c()}${key}:`;
                 s += '{';
