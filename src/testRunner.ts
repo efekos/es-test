@@ -117,7 +117,7 @@ export function run() {
                                 passed: false,
                                 expected: JSON.stringify(sortObject(e.expected)),
                                 actual: JSON.stringify(sortObject(e.actual)),
-                                formatMode: typeof e.actual === 'object'?'obj':'str'
+                                formatMode: typeof e.actual === 'object' ? 'obj' : 'str'
                             };
 
                             if (toBeA.test(e.message)) {
@@ -172,7 +172,7 @@ export function run() {
                                     passed: false,
                                     expected: JSON.stringify(sortObject(e.expected)),
                                     actual: JSON.stringify(sortObject(e.actual)),
-                                    formatMode: typeof e.actual === 'object'?'obj':'str'
+                                    formatMode: typeof e.actual === 'object' ? 'obj' : 'str'
                                 };
                             else if (errorHandlerMap.has(e.name)) testCase.result = errorHandlerMap.get(e.name)(e);
                             else testCase.result = { passed: false, formatMode: 'none', expected: 'No errors', actual: `${e.name}: ${e.message}` };
@@ -231,7 +231,7 @@ function printSum() {
                 console.log(' ');
                 console.log(`${chalk.redBright(chalk.bold('FAIL'))} ${chalk.red(entry.totalTitle)}`);
                 console.log(` Expected: ${chalk.green(entry.expected)}`);
-                console.log(` Actual:   ${format(entry.formatMode,entry.expected,entry.actual)}`);
+                console.log(` Actual:   ${format(entry.formatMode, entry.expected, entry.actual)}`);
             }
 
         if ('passedCases' in entry)
@@ -244,7 +244,7 @@ function printSum() {
 
                     console.log(` Case #${caseNo}`);
                     console.log(`  Expected: ${chalk.green(result.expected)}`);
-                    console.log(`  Actual:   ${format(result.formatMode,result.expected,result.actual)}`);
+                    console.log(`  Actual:   ${format(result.formatMode, result.expected, result.actual)}`);
                 });
             }
     });

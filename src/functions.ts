@@ -101,9 +101,7 @@ function applyObject(str1:string,str2:string):string {
         Object.keys(parent).forEach(key=>{
 
             const v = parent[key];
-            
-           
-
+        
             if(isDifference(v)){
                 if(v.existed) s += `${c()}${key}:`;
                 else s += `${c()}${chalk.blue(key)+':'}`;

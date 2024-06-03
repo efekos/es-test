@@ -74,4 +74,4 @@ interface SummaryEntry {
     failedCases?: number[];
 }
 
-export { Test, TestEvents, EventMap, HandlerFn, Suite, TestResult, SummaryEntry, ErrorHandlerFn, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes, TestCase,TestFormatMode };
+export { Test, TestEvents, EventMap, HandlerFn, Suite, TestResult, SummaryEntry, ErrorHandlerFn, TestingObjectT as TestingObject, TestingObjectType, TestingObjectTypes, TestCase, TestFormatMode };
