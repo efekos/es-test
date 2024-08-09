@@ -54,59 +54,59 @@ function applyChanges(str1: string, str2: string): string {
 }
 
 
-interface Difference {expected:unknown;actual:unknown;existed:boolean};
-type Differences = {[k:string]:Difference|Differences};
+interface Difference { expected: unknown; actual: unknown; existed: boolean; };
+type Differences = { [k: string]: Difference | Differences; };
 
-function isDifference(t:unknown): t is Difference {
+function isDifference(t: unknown): t is Difference {
     return typeof t === 'object' && 'expected' in t && 'actual' in t && 'existed' in t && typeof t.existed === 'boolean';
 }
-function findDifference(_expObject,_actObject):Differences{
+function findDifference(_expObject, _actObject): Differences {
 
-    const res:Differences = {};
+    const res: Differences = {};
 
-    function f(putter,expObject,actObject){
+    function f(putter, expObject, actObject) {
 
-        Object.keys(actObject).forEach(key=>{
+        Object.keys(actObject).forEach(key => {
 
             const v1 = expObject[key];
             const v2 = actObject[key];
 
-            if(typeof v2 === 'object'&&typeof v1 === 'object'){
+            if (typeof v2 === 'object' && typeof v1 === 'object') {
                 putter[key] = {};
-                f(putter[key],v1,v2);
+                f(putter[key], v1, v2);
                 return;
             }
 
-            if(!(key in expObject)) {
-                putter[key] = {expected:v1,actual:v2,existed:false};
+            if (!(key in expObject)) {
+                putter[key] = { expected: v1, actual: v2, existed: false };
                 return;
             }
 
-            putter[key] = {expected:v1,actual:v2,existed:true};
+            putter[key] = { expected: v1, actual: v2, existed: true };
         });
 
     }
 
-    f(res,_expObject,_actObject);
+    f(res, _expObject, _actObject);
     return res;
 }
 
-function applyObject(str1:string,str2:string):string {
-    const differences:Differences = findDifference(JSON.parse(str1),JSON.parse(str2));
+function applyObject(str1: string, str2: string): string {
+    const differences: Differences = findDifference(JSON.parse(str1), JSON.parse(str2));
     let s = '{';
-    const c = ()=>!s.endsWith('{')?',':'';
+    const c = () => !s.endsWith('{') ? ',' : '';
 
-    function f(parent:Differences){
-            
-        Object.keys(parent).forEach(key=>{
+    function f(parent: Differences) {
+
+        Object.keys(parent).forEach(key => {
 
             const v = parent[key];
-        
-            if(isDifference(v)){
-                if(v.existed) s += `${c()}${key}:`;
-                else s += `${c()}${chalk.blue(key)+':'}`;
-                const f = !v.existed?chalk.blue:(v.actual===v.expected?chalk.green:chalk.red);
-                s+= (f===chalk.red?chalk.strikethrough(chalk.green(v.expected))+' ':'')+f(JSON.stringify(v.actual));
+
+            if (isDifference(v)) {
+                if (v.existed) s += `${c()}${key}:`;
+                else s += `${c()}${chalk.blue(key) + ':'}`;
+                const f = !v.existed ? chalk.blue : (v.actual === v.expected ? chalk.green : chalk.red);
+                s += (f === chalk.red ? chalk.strikethrough(chalk.green(v.expected)) + ' ' : '') + f(JSON.stringify(v.actual));
             } else {
                 s += `${c()}${key}:`;
                 s += '{';
@@ -115,19 +115,19 @@ function applyObject(str1:string,str2:string):string {
             }
 
         });
-        
+
     }
 
     f(differences);
     s += '}';
-    return s.replace(/([,:])/g,'$1 ');
+    return s.replace(/([,:])/g, '$1 ');
 }
 
-function format(mode:TestFormatMode,str1:string,str2:string){
-    switch(mode){
+function format(mode: TestFormatMode, str1: string, str2: string) {
+    switch (mode) {
         case 'none': return chalk.red(str2);
-        case 'str': return applyChanges(str1,str2);
-        case 'obj': return applyObject(str1,str2);
+        case 'str': return applyChanges(str1, str2);
+        case 'obj': return applyObject(str1, str2);
     }
 }
 
@@ -137,4 +137,4 @@ function trail(str: string) {
 }
 
 
-export {getId, isAssertionError, sortObject, applyChanges, trail, pluralize, isTestingObject,format};
+export { getId, isAssertionError, sortObject, applyChanges, trail, pluralize, isTestingObject, format };
